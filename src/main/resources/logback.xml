@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="consoleAppender"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} THREAD=[%thread] LEVEL=%-5level
+				CLASS="%class{0}" METHOD="%method{0}" -%msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<!-- 3rd Party loggers -->
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="org.apache" level="ERROR" />
+
+	<!-- Application Loggers -->
+	<logger name="com.service.user" level="INFO" />
+
+	<root level="debug">
+		<appender-ref ref="consoleAppender" />
+	</root>
+
+</configuration>
