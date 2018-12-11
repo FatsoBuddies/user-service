@@ -1,5 +1,6 @@
 package com.service.user.controller;
 
+import com.service.user.constants.SplunkConstants;
 import com.service.user.constants.URIConstants;
 import com.service.user.service.LoginService;
 import com.user.model.entity.Customer;
@@ -31,11 +32,11 @@ public class UserController {
 		//==========================
 		//   Instance methods
 		//==========================
-
+		
 		@PostMapping("/google")
 		public String googleLogin() throws Exception {
 			Customer googleRegisteredCustomer = loginService.googleLoginDetails();
-			logger.info("Successfully logged in with google",googleRegisteredCustomer);
+			logger.info(SplunkConstants.MSG,"Successfully logged in with google for \"{}\"",googleRegisteredCustomer);
 			return googleRegisteredCustomer.toString();
 		}
 

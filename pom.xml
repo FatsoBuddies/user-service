@@ -9,7 +9,7 @@
 	<properties>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
-
+<!-- Move all versions to variable -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

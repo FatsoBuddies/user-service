@@ -24,6 +24,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Tokeninfo;
 import com.google.api.services.oauth2.model.Userinfoplus;
+import com.service.user.constants.SplunkConstants;
 import com.service.user.service.LoginService;
 import com.user.model.entity.Customer;
 import com.user.model.repository.CustomerRepository;
@@ -92,8 +93,8 @@ public class LoginServiceImpl implements LoginService {
 			// set up global Oauth2 instance
 			oauth2 = new Oauth2.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
 					APPLICATION_NAME).build();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
+		} catch (Exception exception) {
+			throw exception;
 		}
 		tokenInfo(credential.getAccessToken());
 		Userinfoplus userInfo = getUserInfo();
@@ -107,18 +108,19 @@ public class LoginServiceImpl implements LoginService {
 	// Google Private methods
 
 	private Userinfoplus getUserInfo() throws IOException {
-		logger.info("Obtaining User Profile Information");
+		logger.info(SplunkConstants.MSG,"Obtaining User Profile Information");
 		Userinfoplus userinfo = oauth2.userinfo().get().execute();
 		logger.info(userinfo.toPrettyString());
 		return userinfo;
 	}
 
-	private void tokenInfo(String accessToken) throws IOException {
-		logger.info("Validating the token");
+	private void tokenInfo(String accessToken) throws Exception {
+		logger.info(SplunkConstants.MSG,"Validating the token");
 		Tokeninfo tokeninfo = oauth2.tokeninfo().setAccessToken(accessToken).execute();
 		logger.info(tokeninfo.toPrettyString());
 		if(!StringUtils.equals(tokeninfo.getAudience(), clientSecrets.getDetails().getClientId())) {
-			logger.error("ERROR: audience does not match our client ID!");
+			logger.error(SplunkConstants.ERR_MSG,"ERROR: audience does not match our client ID!");
+			throw new Exception("ERROR: audience does not match our client ID!");
 		}
 	}
 
@@ -140,7 +142,8 @@ public class LoginServiceImpl implements LoginService {
 					.setDataStoreFactory(dataStoreFactory).build();
 
 		} catch (Exception exception) {
-			logger.error(exception.getLocalizedMessage());
+			logger.error(SplunkConstants.ERR_MSG,exception.getMessage());
+			throw exception;
 		}
 		// authorize
 		return new AuthorizationCodeInstalledApp(flow, 
@@ -148,6 +151,8 @@ public class LoginServiceImpl implements LoginService {
 				.authorize(GOOGLE_USER);
 	}
 	
+	
+	// TODD Encrypt this data && bean mapper.
 	private Customer saveGoogleUser(Userinfoplus userinfo) {
 		Customer registeredCustomer = new Customer();
 		registeredCustomer.setCustomerId(1l);

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.service.user.constants.SplunkConstants;
+
 @RestController
 public class HealthController {
 	
@@ -21,7 +23,7 @@ public class HealthController {
 	
 	@RequestMapping(value= "/health", method = {RequestMethod.GET,RequestMethod.POST})
 	public String getHealth() {
-		logger.debug(" Health Controller");
+		logger.debug(SplunkConstants.MSG," Health Controller");
 		return "200 Ok";
 	}
 }

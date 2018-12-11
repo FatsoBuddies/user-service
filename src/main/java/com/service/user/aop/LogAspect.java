@@ -1,6 +1,5 @@
 package com.service.user.aop;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -19,28 +18,28 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LogAspect {
-	
+
 	// ===============================
 	// Class variables
 	// ===============================
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogAspect.class);
-	
+
 	// ===============================
 	// inatance variables
 	// ===============================
-	
+
 	@Pointcut("within(com.service.user.controller..*)"
 			+"&& !@annotation(com.service.user.aop.NotLog)")
 	public void controllerLoggingPointcut() {
 	}
-	
+
 	@Pointcut("within(com.service.user.service..*)"
 			+"&& !@annotation(com.service.user.aop.NotLog)")
 	public void serviceLoggingPointcut() {
-		
+
 	}
-	
+
 	/**
 	 * Aspect to log controller method invocation including response times
 	 */
@@ -48,7 +47,7 @@ public class LogAspect {
 	public Object logForController(final ProceedingJoinPoint joinPoint) throws Throwable {
 		return log(joinPoint);
 	}
-	
+
 	/**
 	 * Aspect to log Service method invocation including response times
 	 */
@@ -61,7 +60,7 @@ public class LogAspect {
 		String className = joinPoint.getSignature().getDeclaringType().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();
 		String params = StringUtils.EMPTY;
-		
+
 		Object[] args = joinPoint.getArgs();
 		if(args != null) {
 			for (int i = 0; i < args.length; i++) {
@@ -76,11 +75,16 @@ public class LogAspect {
 				LOGGER.debug("CLASS=\"{}\" METHOD=\"{}\" REQ_PARAMS=\"{}\"",className,methodName,params);
 			}
 		}
+		// TODO Revisit stop watch.
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		Object respObject = joinPoint.proceed();
 		stopWatch.stop();
-			LOGGER.info("CLASS=\"{}\" METHOD=\"{}\" TIME=\"{}\" RESP_OBJ=\"{}\"",className,methodName,stopWatch.getTime(),respObject);
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("CLASS=\"{}\" METHOD=\"{}\" TIME=\"{}\" RESP_OBJ=\"{}\"",className,methodName,stopWatch.getTime(),respObject);
+		} else {
+			LOGGER.info("CLASS=\"{}\" METHOD=\"{}\" TIME=\"{}\" ",className,methodName,stopWatch.getTime());
+		}
 		return respObject;
 	}
 }
