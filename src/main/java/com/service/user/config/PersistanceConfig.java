@@ -1,10 +1,6 @@
 package com.service.user.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
@@ -18,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -26,7 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories(basePackages = { "com.service.user" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef= "transactionManager")
+@EnableJpaRepositories(basePackages = { "com.user.model" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef= "transactionManager")
 @EnableTransactionManagement
 public class PersistanceConfig {
 
@@ -50,7 +45,7 @@ public class PersistanceConfig {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
 		entityManagerFactory.setDataSource(getDataSource());
-		entityManagerFactory.setPackagesToScan(new String[] {"com.service.user.entity"});
+		entityManagerFactory.setPackagesToScan(new String[] {"com.user.model.entity"});
 		entityManagerFactory.setJpaProperties(getAdditionalJPAProperties());
 		entityManagerFactory.afterPropertiesSet();
 		return entityManagerFactory.getObject();

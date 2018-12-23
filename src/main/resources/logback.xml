@@ -14,11 +14,13 @@
 	<!-- 3rd Party loggers -->
 	<logger name="org.springframework" level="ERROR" />
 	<logger name="org.apache" level="ERROR" />
+	<logger name="javax.*" level="ERROR"></logger>
 
 	<!-- Application Loggers -->
 	<logger name="com.service.user" level="INFO" />
+	<logger name="com.user" level="INFO" />
 
-	<root level="debug">
+	<root level="DEBUG">
 		<appender-ref ref="consoleAppender" />
 	</root>
 
